@@ -118,28 +118,18 @@
     background:radial-gradient(closest-side, rgba(99,102,241,.14), transparent 72%);
   }
 
-  /* ---------- hero glass orbs (decorative, brand colors only) ---------- */
+  /* ---------- hero decorative Google G marks (desktop only) ---------- */
   .hero .wrap{position:relative;z-index:1;}
   .hero-orb{
-    position:absolute;z-index:0;border-radius:50%;pointer-events:none;overflow:hidden;
-    display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(135deg, rgba(255,255,255,.14), rgba(129,140,248,.08));
-    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-    border:1px solid rgba(255,255,255,.09);
-    box-shadow:0 8px 32px rgba(99,102,241,.18), inset 0 1px 1px rgba(255,255,255,.12);
+    position:absolute;z-index:0;pointer-events:none;
+    filter:blur(1.5px);opacity:.8;
   }
-  :root[data-theme="light"] .hero-orb{
-    background:linear-gradient(135deg, rgba(255,255,255,.55), rgba(99,102,241,.10));
-    border-color:rgba(255,255,255,.5);
-    box-shadow:0 8px 32px rgba(99,102,241,.12), inset 0 1px 1px rgba(255,255,255,.4);
-  }
-  .hero-orb img{width:65%;height:65%;object-fit:contain;filter:blur(2.5px);opacity:.55;}
-  .hero-orb-1{width:88px;height:88px;top:14%;left:3%;}
-  .hero-orb-2{width:56px;height:56px;top:52%;left:8%;}
-  .hero-orb-3{width:120px;height:120px;bottom:6%;left:1%;}
-  .hero-orb-4{width:100px;height:100px;top:12%;right:3%;}
-  .hero-orb-5{width:64px;height:64px;top:50%;right:7%;}
-  .hero-orb-6{width:110px;height:110px;bottom:8%;right:2%;}
+  .hero-orb-1{width:66px;top:9%;left:4%;}
+  .hero-orb-2{width:52px;top:40%;left:9%;}
+  .hero-orb-3{width:82px;top:74%;left:2%;}
+  .hero-orb-4{width:60px;top:22%;right:5%;}
+  .hero-orb-5{width:76px;top:58%;right:3%;}
+  .hero-orb-6{width:48px;top:86%;right:9%;}
   @media (max-width:899px){ .hero-orb{display:none;} }
 
   /* ---------- shimmer heading ---------- */
@@ -408,12 +398,12 @@
   <div class="bg-blob blob-mid" aria-hidden="true"></div>
 
   <section class="hero">
-    <div class="hero-orb hero-orb-1" aria-hidden="true"><img src="assets/google-g.webp" alt=""></div>
-    <div class="hero-orb hero-orb-2" aria-hidden="true"><img src="assets/google-g.webp" alt=""></div>
-    <div class="hero-orb hero-orb-3" aria-hidden="true"><img src="assets/google-g.webp" alt=""></div>
-    <div class="hero-orb hero-orb-4" aria-hidden="true"><img src="assets/google-g.webp" alt=""></div>
-    <div class="hero-orb hero-orb-5" aria-hidden="true"><img src="assets/google-g.webp" alt=""></div>
-    <div class="hero-orb hero-orb-6" aria-hidden="true"><img src="assets/google-g.webp" alt=""></div>
+    <img class="hero-orb hero-orb-1" src="assets/google-g.webp" alt="" aria-hidden="true">
+    <img class="hero-orb hero-orb-2" src="assets/google-g.webp" alt="" aria-hidden="true">
+    <img class="hero-orb hero-orb-3" src="assets/google-g.webp" alt="" aria-hidden="true">
+    <img class="hero-orb hero-orb-4" src="assets/google-g.webp" alt="" aria-hidden="true">
+    <img class="hero-orb hero-orb-5" src="assets/google-g.webp" alt="" aria-hidden="true">
+    <img class="hero-orb hero-orb-6" src="assets/google-g.webp" alt="" aria-hidden="true">
     <div class="wrap hero-inner">
       <span class="eyebrow"><i></i><span>✦ Muito além do Gemini</span><i class="right"></i></span>
       <h1 class="shimmer">Google IA Pro · 18 Meses</h1>
