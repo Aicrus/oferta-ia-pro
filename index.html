@@ -225,8 +225,21 @@
   @media (min-width:768px){ .sec-head h2{font-size:38px;} }
   .sec-head p{font-size:17px;color:var(--text-muted);}
 
-  .video-frame{max-width:860px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid var(--border-soft);background:#000;box-shadow:0 30px 60px -20px rgba(0,0,0,.4);}
-  .video-frame video,.video-frame iframe{width:100%;display:block;aspect-ratio:16/9;}
+  .video-frame{position:relative;max-width:860px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid var(--border-soft);background:#000;box-shadow:0 30px 60px -20px rgba(0,0,0,.4);aspect-ratio:16/9;}
+  .bunny-iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+  .bunny-active{opacity:0;pointer-events:none;transition:opacity .25s ease;}
+  .bunny-active.is-visible{opacity:1;pointer-events:auto;}
+  .video-play-btn{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;
+    width:76px;height:76px;border-radius:50%;
+    background:rgba(255,255,255,.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    border:1px solid rgba(255,255,255,.35);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);transition:transform .2s ease, background .2s ease;
+  }
+  .video-play-btn:hover{transform:translate(-50%,-50%) scale(1.06);background:rgba(255,255,255,.22);}
+  .video-play-btn svg{margin-left:4px;}
+  .video-play-btn[hidden]{display:none;}
 
   /* ---------- hero ---------- */
   .hero-inner{padding:44px 0 40px;text-align:center;width:100%;}
@@ -429,9 +442,13 @@
         <h2 class="shimmer">Assista em menos de 2 minutos</h2>
         <p>Veja como funciona a ativação e o que você recebe no Google IA Pro.</p>
       </div>
-      <div class="video-frame">
-        <!-- TODO: vídeo provisório, troque quando gravar o definitivo -->
-        <iframe src="https://player.mediadelivery.net/play/710273/1bc2b299-adfe-40f8-a7ef-362e7c08f53b?autoplay=false" loading="lazy" style="border:0;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen></iframe>
+      <!-- TODO: vídeo provisório, troque quando gravar o definitivo -->
+      <div class="video-frame" id="videoFrame">
+        <iframe id="bunnyPreview" class="bunny-iframe" src="https://player.mediadelivery.net/play/710273/1bc2b299-adfe-40f8-a7ef-362e7c08f53b?autoplay=true&loop=true&muted=true&controls=false&preload=true&playsinline=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen></iframe>
+        <iframe id="bunnyActive" class="bunny-iframe bunny-active" src="https://player.mediadelivery.net/play/710273/1bc2b299-adfe-40f8-a7ef-362e7c08f53b?autoplay=true&loop=true&muted=true&controls=true&preload=true&playsinline=true" loading="lazy" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen></iframe>
+        <button class="video-play-btn" id="videoPlayBtn" aria-label="Assistir com som">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="#fff"/></svg>
+        </button>
       </div>
     </div>
   </section>
@@ -822,6 +839,75 @@
       }, {threshold:0.15, rootMargin:'0px 0px -40px 0px'});
       targets.forEach(function(el){ io.observe(el); });
     }
+  })();
+
+  // vídeo: preview mudo em loop por cima, player ativo já bufferizando por baixo;
+  // no clique, o ativo (já carregado) recebe som e some o preview — sem recarregar nada.
+  (function(){
+    var BASE = 'https://player.mediadelivery.net/play/710273/1bc2b299-adfe-40f8-a7ef-362e7c08f53b';
+    var LIVE_UNMUTED = BASE + '?autoplay=true&loop=true&muted=false&controls=true&preload=true&playsinline=true';
+    var frame = document.getElementById('videoFrame');
+    var previewEl = document.getElementById('bunnyPreview');
+    var activeEl = document.getElementById('bunnyActive');
+    var playBtn = document.getElementById('videoPlayBtn');
+    if(!frame || !previewEl || !activeEl || !playBtn) return;
+
+    var activePlayer = null;
+    var playerReady = false;
+    var started = false;
+
+    function onStarted(){
+      if(started) return;
+      started = true;
+      playBtn.hidden = true;
+      activeEl.classList.add('is-visible');
+      previewEl.style.visibility = 'hidden';
+    }
+
+    function startWithSound(){
+      if(started) return;
+      if(playerReady && activePlayer){
+        activePlayer.setCurrentTime(0);
+        activePlayer.unmute();
+        activePlayer.setVolume(100);
+        activePlayer.play();
+        onStarted();
+      } else {
+        // Player.js ainda não respondeu (ou iOS bloqueia unmute() fora do gesto de toque):
+        // remonta o iframe ativo já nascendo com som, dentro do mesmo clique
+        activeEl.src = LIVE_UNMUTED;
+        activeEl.addEventListener('load', onStarted, { once: true });
+      }
+    }
+
+    (function loadPlayerJs(){
+      if(window.playerjs){ setup(); return; }
+      var s = document.createElement('script');
+      s.src = 'https://assets.mediadelivery.net/playerjs/player-0.1.0.min.js';
+      s.onload = setup;
+      document.head.appendChild(s);
+    })();
+
+    function setup(){
+      if(!window.playerjs) return;
+      activePlayer = new playerjs.Player(activeEl);
+      activePlayer.on('ready', function(){ playerReady = true; });
+      activePlayer.on('play', onStarted);
+    }
+
+    playBtn.addEventListener('click', startWithSound);
+
+    var lastTap = 0;
+    frame.addEventListener('click', function(e){
+      if(e.target === playBtn || playBtn.contains(e.target)) return;
+      var now = Date.now();
+      if(now - lastTap < 350){
+        if(!started) startWithSound();
+        if(document.fullscreenElement){ document.exitFullscreen(); }
+        else if(frame.requestFullscreen){ frame.requestFullscreen(); }
+      }
+      lastTap = now;
+    });
   })();
 
   // persona filter tabs
