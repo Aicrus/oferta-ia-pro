@@ -11,6 +11,23 @@
   gtag('js', new Date());
   gtag('config', 'G-GPT301X0J1');
 </script>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1648785149930739');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1648785149930739&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <script>
   // aplica o tema (salvo ou do sistema) antes da página renderizar, pra não piscar
   (function(){
@@ -44,6 +61,7 @@
 <link rel="preconnect" href="https://player.mediadelivery.net">
 <link rel="preconnect" href="https://assets.mediadelivery.net">
 <link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="preconnect" href="https://connect.facebook.net">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
@@ -809,6 +827,7 @@
       error.hidden = true;
       input.removeAttribute('aria-invalid');
       setSubmitLoading(true);
+      if(window.fbq) fbq('track', 'Lead');
 
       // abre a aba em branco já no clique (síncrono) para o navegador não bloquear como pop-up
       var checkoutTab = window.open('', '_blank');
@@ -855,6 +874,8 @@
   // post-payment thank-you banner
   (function(){
     if(new URLSearchParams(window.location.search).get('pago') !== '1') return;
+    if(window.fbq) fbq('track', 'Purchase', { value: 84.90, currency: 'BRL' });
+    if(window.gtag) gtag('event', 'purchase', { value: 84.90, currency: 'BRL' });
     var b = document.createElement('div');
     b.textContent = 'Pagamento confirmado! Verifique seu e-mail para o código de ativação.';
     b.style.cssText = 'position:sticky;top:0;z-index:60;background:#16a34a;color:#fff;text-align:center;padding:10px 16px;font-size:14px;';
