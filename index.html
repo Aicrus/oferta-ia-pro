@@ -396,6 +396,11 @@ src="https://www.facebook.com/tr?id=1648785149930739&ev=PageView&noscript=1"
   .faq .plus::after{width:2px;height:12px;top:4px;left:9px;transition:transform .2s ease;}
   .faq details[open] .plus::after{transform:rotate(90deg);}
   .faq details p{margin-top:12px;font-size:14px;color:var(--text-muted);max-width:64ch;line-height:1.7;}
+  .faq-contact{margin-top:28px;padding-top:24px;border-top:1px solid var(--border-soft);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .faq-contact p{font-size:14px;color:var(--text-muted);}
+  .faq-contact .btn-whatsapp{border-color:rgba(37,211,102,.35);}
+  .faq-contact .btn-whatsapp:hover{border-color:#25D366;}
+  .faq-contact .btn-whatsapp svg{width:18px;height:18px;color:#25D366;}
 
   /* ---------- CTA band ---------- */
   .cta-wash{background:linear-gradient(to right, transparent, var(--veil));border-radius:24px;}
@@ -688,6 +693,13 @@ src="https://www.facebook.com/tr?id=1648785149930739&ev=PageView&noscript=1"
           <summary>Posso desistir e pedir reembolso?<span class="plus"></span></summary>
           <p>Sim, antes de resgatar o código: como a ativação usa um código oficial de resgate vinculado à sua conta Google, ela não pode ser desfeita depois de usada. Por isso, o reembolso só pode ser feito enquanto o código ainda não foi resgatado. Fale com a gente o quanto antes se precisar cancelar.</p>
         </details>
+        <div class="faq-contact">
+          <p>Ainda ficou com alguma dúvida?</p>
+          <a class="btn btn-ghost btn-whatsapp" href="https://api.whatsapp.com/send?phone=5547989214925" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 1.8a8.2 8.2 0 0 1 6.9 12.6l-.3.4.7 2.5-2.6-.7-.4.2A8.2 8.2 0 1 1 12 3.8Zm-3.4 4a1 1 0 0 0-.7.3c-.2.3-1 1-1 2.3s1 2.6 1.1 2.8c.1.2 2 3.1 4.9 4.2 2.4 1 2.9.8 3.4.7.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.3-.6-.4l-2-1c-.3-.1-.5-.1-.6.1l-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.5-.9-.8-1.5-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5.3-.5c.1-.2 0-.4 0-.5l-.9-2.1c-.2-.5-.4-.4-.6-.4h-.5Z"/></svg>
+            Falar no WhatsApp
+          </a>
+        </div>
       </div>
     </div>
   </section>
