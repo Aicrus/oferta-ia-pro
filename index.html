@@ -21,11 +21,11 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1648785149930739');
+fbq('init', '4508931149354353');
 fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1648785149930739&ev=PageView&noscript=1"
+src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 <script>
@@ -904,8 +904,15 @@ src="https://www.facebook.com/tr?id=1648785149930739&ev=PageView&noscript=1"
   // post-payment thank-you banner
   (function(){
     if(new URLSearchParams(window.location.search).get('pago') !== '1') return;
-    if(window.fbq) fbq('track', 'Purchase', { value: 84.90, currency: 'BRL' });
-    if(window.gtag) gtag('event', 'purchase', { value: 84.90, currency: 'BRL' });
+    // dispara a compra só uma vez por navegador e limpa o ?pago=1 da URL (evita compras repetidas ao recarregar)
+    var jaContou = false;
+    try { jaContou = localStorage.getItem('purchase_tracked') === '1'; } catch(e){}
+    try { history.replaceState(null, '', window.location.pathname + window.location.hash); } catch(e){}
+    if(!jaContou){
+      try { localStorage.setItem('purchase_tracked', '1'); } catch(e){}
+      if(window.fbq) fbq('track', 'Purchase', { value: 84.90, currency: 'BRL' });
+      if(window.gtag) gtag('event', 'purchase', { value: 84.90, currency: 'BRL' });
+    }
     var b = document.createElement('div');
     b.textContent = 'Pagamento confirmado! Verifique seu e-mail para o código de ativação.';
     b.style.cssText = 'position:sticky;top:0;z-index:60;background:#16a34a;color:#fff;text-align:center;padding:10px 16px;font-size:14px;';
