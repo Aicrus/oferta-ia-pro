@@ -42,6 +42,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
   })();
 </script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='2' y1='1' x2='22' y2='23'%3E%3Cstop offset='0' stop-color='%23818cf8'/%3E%3Cstop offset='1' stop-color='%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='6' fill='%23111827'/%3E%3Cpath d='M12 1c.6 4.6 1.9 7.6 4.6 9.4S22 12 22 12s-3.7.3-5.4 1.6S12.6 18.4 12 23c-.6-4.6-1.9-7.6-4.6-9.4S2 12 2 12s3.7-.3 5.4-1.6S11.4 5.6 12 1Z' fill='url(%23g)'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <title>Google IA Pro · 18 Meses | 12 ferramentas de IA do Google por R$ 84,90</title>
 <meta name="description" content="Gemini Pro, Flow, 5 TB de armazenamento, NotebookLM, Veo e mais 8 ferramentas de IA do Google, ativadas por 18 meses direto na sua conta Gmail. Pagamento único de R$ 84,90, sem mensalidade.">
 <meta name="robots" content="index, follow">
@@ -53,7 +54,12 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
 <meta property="og:site_name" content="Google IA Pro">
 <meta property="og:title" content="Google IA Pro · 18 Meses | 12 ferramentas de IA do Google por R$ 84,90">
 <meta property="og:description" content="Gemini Pro, Flow, 5 TB de armazenamento, NotebookLM, Veo e mais 8 ferramentas de IA do Google, ativadas por 18 meses direto na sua conta Gmail. Pagamento único, sem mensalidade.">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://iapro.kasy.dev/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Google IA Pro · 18 Meses por R$ 84,90 em pagamento único">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://iapro.kasy.dev/assets/og-image.png">
 <meta name="twitter:title" content="Google IA Pro · 18 Meses">
 <meta name="twitter:description" content="12 ferramentas de IA do Google ativadas por 18 meses na sua conta Gmail, por R$ 84,90 em pagamento único.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -139,7 +145,8 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
   }
 
   *{box-sizing:border-box;}
-  html{-webkit-text-size-adjust:100%;overflow-x:hidden;width:100%;}
+  html{-webkit-text-size-adjust:100%;overflow-x:hidden;width:100%;scroll-padding-top:88px;}
+  @media (prefers-reduced-motion:no-preference){ html{scroll-behavior:smooth;} }
   body{
     margin:0;
     background:var(--bg);
@@ -381,6 +388,51 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
   .persona-card h3{font-size:15.5px;font-weight:600;color:var(--heading-50);margin-bottom:8px;}
   .persona-card p{font-size:13.5px;color:var(--text-muted);line-height:1.65;}
 
+  /* ---------- como funciona (3 passos) ---------- */
+  .steps{display:grid;grid-template-columns:1fr;gap:14px;max-width:420px;margin:0 auto;counter-reset:step;}
+  @media (min-width:768px){ .steps{grid-template-columns:repeat(3,1fr);gap:20px;max-width:none;} }
+  .step{
+    position:relative;border-radius:16px;padding:22px 20px;
+    background:linear-gradient(to bottom right, var(--panel-edge), var(--panel-mid), var(--panel-edge));
+    border:1px solid var(--border-soft);
+  }
+  .step-num{
+    display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;
+    font-family:var(--font-display);font-size:14px;font-weight:600;color:#fff;margin-bottom:14px;
+    background:linear-gradient(to top, var(--indigo-600), var(--indigo-500));
+    box-shadow:0 6px 16px -6px rgba(99,102,241,.6);
+  }
+  .step h3{font-size:16px;font-weight:600;color:var(--heading-50);margin-bottom:6px;}
+  .step p{font-size:13.5px;color:var(--text-muted);line-height:1.65;}
+  .steps-note{margin-top:24px;text-align:center;font-size:13.5px;color:var(--text-body);}
+  .steps-note a{color:var(--accent-text);font-weight:500;border-bottom:1px solid currentColor;}
+
+  /* ---------- selos de pagamento / preço ---------- */
+  .pay-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin-top:18px;font-size:12.5px;color:var(--text-body);}
+  .pay-badges span{display:inline-flex;align-items:center;gap:6px;}
+  .pay-badges svg{flex:none;color:var(--accent-text);}
+  .price-note{font-size:14px;color:var(--text-muted);margin:-12px 0 24px;}
+  .price-note strong{color:var(--heading-50);font-weight:600;}
+  .cta-tag{display:inline-block;font-size:12px;font-weight:500;color:var(--accent-text);border:1px solid rgba(99,102,241,.35);border-radius:999px;padding:4px 12px;margin-bottom:16px;}
+  .modal-secure{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-size:12px;color:var(--text-faint);}
+  .modal-secure svg{flex:none;}
+
+  /* ---------- CTA fixo no celular ---------- */
+  .sticky-cta{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    background:var(--glass-1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-top:1px solid var(--border);
+    display:flex;align-items:center;gap:12px;
+    transform:translateY(110%);transition:transform .3s ease;
+  }
+  .sticky-cta.show{transform:translateY(0);}
+  .sticky-cta-price{flex:none;line-height:1.25;}
+  .sticky-cta-price strong{display:block;font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--heading-50);}
+  .sticky-cta-price span{font-size:11.5px;color:var(--text-muted);}
+  .sticky-cta .btn{flex:1;height:44px;}
+  @media (min-width:768px){ .sticky-cta{display:none;} }
+
   /* ---------- FAQ ---------- */
   .faq{max-width:720px;margin:0 auto;}
   .faq details{border-bottom:1px solid var(--border-soft);padding:18px 0;}
@@ -455,7 +507,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
 
   @media (prefers-reduced-motion:reduce){
     .shimmer{animation:none;}
-    .btn,.tab,.persona-card,.feat-card{transition:none;}
+    .btn,.tab,.persona-card,.feat-card,.sticky-cta{transition:none;}
     .reveal{transition:none;opacity:1;transform:none;}
     .btn-primary:not(.btn-sm)::after{display:none;}
     .btn-primary:not(.btn-sm):hover{transform:none;}
@@ -473,7 +525,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
       </a>
       <nav class="navlinks">
         <a href="#recursos">O que está incluído</a>
-        <a href="#video">Como funciona</a>
+        <a href="#como-funciona">Como funciona</a>
         <a href="#faq">Perguntas</a>
       </nav>
       <div class="navcta">
@@ -486,7 +538,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
     </div>
     <div class="mobilemenu" id="mobilemenu">
       <a href="#recursos">O que está incluído</a>
-      <a href="#video">Como funciona</a>
+      <a href="#como-funciona">Como funciona</a>
       <a href="#faq">Perguntas</a>
       <a href="#" data-cta="obter-oferta">Obter Oferta</a>
     </div>
@@ -536,6 +588,34 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="#fff"/></svg>
         </button>
       </div>
+    </div>
+  </section>
+
+  <section id="como-funciona" class="section-pad divider-top">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow"><i></i><span>Como funciona</span><i class="right"></i></span>
+        <h2 class="shimmer">Ativado em 3 passos simples</h2>
+        <p>Sem instalar nada e sem passar sua senha para ninguém.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <h3>Garanta sua oferta</h3>
+          <p>Informe seu e-mail e pague R$ 84,90 uma única vez, com pagamento seguro via InfinitePay.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <h3>Receba o código no e-mail</h3>
+          <p>Assim que o pagamento é confirmado, enviamos o código oficial de resgate do Google para o e-mail informado.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <h3>Ative na sua conta Gmail</h3>
+          <p>Você mesmo insere o código na sua conta Google e libera as 12 ferramentas por 18 meses.</p>
+        </div>
+      </div>
+      <p class="steps-note">Ficou com dúvida em algum passo? <a href="https://api.whatsapp.com/send?phone=5547989214925" target="_blank" rel="noopener noreferrer">A gente te ajuda pelo WhatsApp</a>.</p>
     </div>
   </section>
 
@@ -712,12 +792,19 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
     <div class="wrap">
       <div class="cta-wash">
         <div class="cta-inner">
+          <span class="cta-tag">Parceria por tempo limitado</span>
           <h2 class="shimmer">Tudo isso por R$ 84,90 em pagamento único</h2>
+          <p class="price-note">Dá menos de <strong>R$ 4,72 por mês</strong> pelos 18 meses, sem mensalidade.</p>
           <div class="hero-ctas" style="margin-bottom:0;">
             <a class="btn btn-primary" href="#" data-cta="obter-oferta">
               <span style="display:inline-flex;align-items:center;gap:6px;">Obter Oferta <span style="opacity:.5">&rarr;</span></span>
             </a>
             <a class="btn btn-ghost" href="#faq">Ver perguntas frequentes</a>
+          </div>
+          <div class="pay-badges">
+            <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="11" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Pagamento seguro via InfinitePay</span>
+            <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Pix ou cartão</span>
+            <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 3 5 6v5c0 4.5 3 8.4 7 10 4-1.6 7-5.5 7-10V6l-7-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reembolso antes do resgate</span>
           </div>
         </div>
       </div>
@@ -733,7 +820,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
         <h4>Página</h4>
         <ul>
           <li><a href="#recursos">O que está incluído</a></li>
-          <li><a href="#video">Como funciona</a></li>
+          <li><a href="#como-funciona">Como funciona</a></li>
           <li><a href="#feito-para-quem">Feito para quem</a></li>
           <li><a href="#faq">Perguntas frequentes</a></li>
         </ul>
@@ -783,6 +870,11 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
   </div>
 </footer>
 
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <div class="sticky-cta-price"><strong>R$ 84,90</strong><span>pagamento único</span></div>
+  <a class="btn btn-primary btn-sm" href="#" data-cta="obter-oferta" tabindex="-1">Obter Oferta <span style="opacity:.5">&rarr;</span></a>
+</div>
+
 <div class="email-modal" id="emailModal" hidden>
   <div class="email-modal-card">
     <button class="icon-btn email-modal-close" id="emailModalClose" aria-label="Fechar">
@@ -796,6 +888,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
       <button class="btn btn-primary" type="submit" id="emailModalSubmit">Continuar para pagamento <span style="opacity:.5">&rarr;</span></button>
       <p class="email-modal-wait" id="emailModalWait" role="status" hidden>Gerando seu link de pagamento seguro, aguarde alguns segundos...</p>
     </form>
+    <p class="modal-secure"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="4" y="10" width="16" height="11" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Pagamento seguro via InfinitePay · Pix ou cartão</p>
   </div>
 </div>
 
@@ -968,7 +1061,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
   (function(){
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(!reduce && 'IntersectionObserver' in window){
-      var targets = document.querySelectorAll('.sec-head, .feat-card, .persona-card, .cta-inner');
+      var targets = document.querySelectorAll('.sec-head, .feat-card, .persona-card, .step, .cta-inner');
       targets.forEach(function(el){ el.classList.add('reveal'); });
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(entry){
@@ -1049,6 +1142,37 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
       }
       lastTap = now;
     });
+  })();
+
+  // CTA fixo no celular: aparece depois que o botão do topo sai da tela e some perto do CTA final/rodapé
+  (function(){
+    var bar = document.getElementById('stickyCta');
+    var heroCta = document.querySelector('.hero-ctas');
+    var endZone = document.querySelector('.cta-wash');
+    var foot = document.querySelector('footer');
+    var modal = document.getElementById('emailModal');
+    if(!bar || !heroCta || !('IntersectionObserver' in window)) return;
+    var pastHero = false, nearEnd = false;
+    function update(){
+      var show = pastHero && !nearEnd && (!modal || modal.hidden);
+      bar.classList.toggle('show', show);
+      bar.setAttribute('aria-hidden', show ? 'false' : 'true');
+      var link = bar.querySelector('a');
+      if(link) link.tabIndex = show ? 0 : -1;
+    }
+    new IntersectionObserver(function(entries){
+      pastHero = !entries[0].isIntersecting && entries[0].boundingClientRect.top < 0;
+      update();
+    }).observe(heroCta);
+    var visible = new Set();
+    var endIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ e.isIntersecting ? visible.add(e.target) : visible.delete(e.target); });
+      nearEnd = visible.size > 0;
+      update();
+    });
+    if(endZone) endIo.observe(endZone);
+    if(foot) endIo.observe(foot);
+    if(modal) new MutationObserver(update).observe(modal, { attributes:true, attributeFilter:['hidden'] });
   })();
 
   // persona filter tabs
