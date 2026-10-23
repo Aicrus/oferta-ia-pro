@@ -417,6 +417,17 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
   .modal-secure{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-size:12px;color:var(--text-faint);}
   .modal-secure svg{flex:none;}
 
+  /* ---------- confirmação de pagamento ---------- */
+  .paid-card{text-align:center;}
+  .paid-icon{width:56px;height:56px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;background:rgba(22,163,74,.12);color:#16a34a;}
+  .paid-card h3{font-size:22px;}
+  .paid-card .email-modal-sub{margin-bottom:6px;}
+  .paid-email{font-weight:600;color:var(--heading-50);word-break:break-all;}
+  .paid-hint{font-size:12.5px;color:var(--text-faint);margin-bottom:22px;line-height:1.6;}
+  .btn-whatsapp{background:#25D366;color:#fff;gap:8px;}
+  .btn-whatsapp:hover{filter:brightness(1.05);}
+  .paid-card .btn + .btn{margin-top:10px;}
+
   /* ---------- CTA fixo no celular ---------- */
   .sticky-cta{
     position:fixed;left:0;right:0;bottom:0;z-index:60;
@@ -892,6 +903,17 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
   </div>
 </div>
 
+<div class="email-modal" id="paidModal" role="dialog" aria-modal="true" aria-labelledby="paidTitle" hidden>
+  <div class="email-modal-card paid-card">
+    <div class="paid-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <h3 id="paidTitle">Pagamento confirmado!</h3>
+    <p class="email-modal-sub" id="paidText">Obrigado pela compra. Você vai receber o link de ativação no e-mail que informou.</p>
+    <p class="paid-hint">Fique de olho na caixa de entrada e também nas abas Spam e Promoções.</p>
+    <a class="btn btn-whatsapp" id="paidWhatsapp" href="https://api.whatsapp.com/send?phone=5547989214925" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 1.8a8.2 8.2 0 0 1 6.9 12.6l-.3.4.7 2.5-2.6-.7-.4.2A8.2 8.2 0 1 1 12 3.8Zm-3.4 4a1 1 0 0 0-.7.3c-.2.3-1 1-1 2.3s1 2.6 1.1 2.8c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.4l-1.9-.9c-.3-.1-.5-.1-.7.1l-.9 1.1c-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.8-.8-1.4-1.7-1.5-2-.2-.3 0-.4.1-.6l.4-.5.3-.5v-.5l-.9-2.1c-.2-.5-.4-.5-.6-.5h-.5Z"/></svg>Não chegou? Fale no WhatsApp</a>
+    <button class="btn btn-ghost" type="button" id="paidClose">Fechar</button>
+  </div>
+</div>
+
 <script>
   // Modal de e-mail + checkout InfinitePay: guarda o e-mail (ligado ao order_nsu) antes
   // de gerar o link de pagamento, porque o webhook da InfinitePay NÃO devolve o e-mail
@@ -1000,6 +1022,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
         .then(function(res){
           var data = res[0];
           if(!data || !data.url) throw new Error('Resposta sem url');
+          try { localStorage.setItem('checkout_email', email); } catch(e){} // mostrado na tela de confirmação
           window.location.href = data.url;
         })
         .catch(function(){
@@ -1022,10 +1045,27 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
       if(window.fbq) fbq('track', 'Purchase', { value: 84.90, currency: 'BRL' });
       if(window.gtag) gtag('event', 'purchase', { value: 84.90, currency: 'BRL' });
     }
-    var b = document.createElement('div');
-    b.textContent = 'Pagamento confirmado! Verifique seu e-mail para o link de ativação.';
-    b.style.cssText = 'position:sticky;top:0;z-index:60;background:#16a34a;color:#fff;text-align:center;padding:10px 16px;font-size:14px;';
-    document.body.insertBefore(b, document.body.firstChild);
+    var modal = document.getElementById('paidModal');
+    if(!modal) return;
+    var email = '';
+    try { email = localStorage.getItem('checkout_email') || ''; } catch(e){}
+    if(email){
+      var text = document.getElementById('paidText');
+      text.textContent = 'Obrigado pela compra. Você vai receber o link de ativação no e-mail ';
+      var strong = document.createElement('span');
+      strong.className = 'paid-email';
+      strong.textContent = email;
+      text.appendChild(strong);
+      text.appendChild(document.createTextNode('.'));
+      document.getElementById('paidWhatsapp').href = 'https://api.whatsapp.com/send?phone=5547989214925&text=' +
+        encodeURIComponent('Olá! Acabei de comprar o Google IA Pro. Meu e-mail é ' + email + '.');
+    }
+    function close(){ modal.hidden = true; document.body.style.overflow = ''; }
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    document.getElementById('paidClose').addEventListener('click', close);
+    modal.addEventListener('click', function(e){ if(e.target === modal) close(); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !modal.hidden) close(); });
   })();
 
   // theme toggle: acompanha o sistema até a pessoa escolher manualmente (aí fica salvo)
