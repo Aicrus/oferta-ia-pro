@@ -421,6 +421,11 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
   .modal-input[aria-invalid="true"]{border-color:#f87171;}
   .field-error{font-size:12.5px;color:#ef4444;margin:0 0 8px;}
   .email-modal-card .btn{width:100%;height:48px;}
+  .email-modal-card .btn[aria-busy="true"]{cursor:progress;filter:none;transform:none;opacity:.85;}
+  .btn-spinner{display:inline-block;width:16px;height:16px;margin-right:8px;vertical-align:-3px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:btn-spin .7s linear infinite;}
+  @keyframes btn-spin{ to{ transform:rotate(360deg); } }
+  .email-modal-wait{font-size:12.5px;color:var(--text-muted);text-align:center;margin-top:12px;}
+  .email-modal-wait[hidden]{display:none;}
 
   /* ---------- footer ---------- */
   footer{padding-top:8px;}
@@ -789,6 +794,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
       <input class="modal-input" type="email" id="emailModalInput" placeholder="seuemail@gmail.com" autocomplete="email" inputmode="email">
       <p class="field-error" id="emailModalError" hidden>Digite um e-mail válido para continuar.</p>
       <button class="btn btn-primary" type="submit" id="emailModalSubmit">Continuar para pagamento <span style="opacity:.5">&rarr;</span></button>
+      <p class="email-modal-wait" id="emailModalWait" role="status" hidden>Gerando seu link de pagamento seguro, aguarde alguns segundos...</p>
     </form>
   </div>
 </div>
@@ -811,6 +817,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
     var input = document.getElementById('emailModalInput');
     var error = document.getElementById('emailModalError');
     var submitBtn = document.getElementById('emailModalSubmit');
+    var waitMsg = document.getElementById('emailModalWait');
     if(!openers.length || !modal || !form) return;
 
     function openModal(){
@@ -822,19 +829,27 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
       setTimeout(function(){ input.focus(); }, 30);
     }
     function closeModal(){
+      if(submitBtn.getAttribute('aria-busy') === 'true') return; // não fecha enquanto gera o link
       modal.hidden = true;
       document.body.style.overflow = '';
     }
     function setSubmitLoading(loading){
       if(loading){
-        submitBtn.dataset.label = submitBtn.textContent;
-        submitBtn.textContent = 'Preparando pagamento...';
+        submitBtn.dataset.label = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span>Preparando pagamento...';
         submitBtn.setAttribute('aria-busy', 'true');
+        input.disabled = true;
+        waitMsg.hidden = false;
       } else {
-        submitBtn.textContent = submitBtn.dataset.label || submitBtn.textContent;
+        submitBtn.innerHTML = submitBtn.dataset.label || submitBtn.innerHTML;
         submitBtn.removeAttribute('aria-busy');
+        input.disabled = false;
+        waitMsg.hidden = true;
       }
     }
+
+    // ao voltar do checkout pelo botão "voltar" (bfcache), tira o carregamento do botão
+    window.addEventListener('pageshow', function(e){ if(e.persisted){ setSubmitLoading(false); closeModal(); } });
 
     openers.forEach(function(el){
       el.addEventListener('click', function(e){ e.preventDefault(); openModal(); });
@@ -849,6 +864,7 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
       var email = input.value.trim();
       var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       if(!valid){
+        error.textContent = 'Digite um e-mail válido para continuar.';
         error.hidden = false;
         input.setAttribute('aria-invalid', 'true');
         input.focus();
@@ -859,41 +875,41 @@ src="https://www.facebook.com/tr?id=4508931149354353&ev=PageView&noscript=1"
       setSubmitLoading(true);
       if(window.fbq) fbq('track', 'Lead');
 
-      // abre a aba em branco já no clique (síncrono) para o navegador não bloquear como pop-up
-      var checkoutTab = window.open('', '_blank');
       var orderNsu = 'lp-' + Date.now();
 
-      // 1) registra order_nsu + e-mail na planilha (Apps Script), 2) só então gera o link de pagamento
-      fetch(APPS_SCRIPT_URL, {
+      // registro do e-mail (Apps Script) e geração do link rodam em paralelo; o carregamento fica
+      // aqui na própria página e só redireciona (mesma aba) quando o link de pagamento estiver pronto.
+      // keepalive garante que o registro termine mesmo se a página já tiver redirecionado.
+      var registro = fetch(APPS_SCRIPT_URL, {
         method: 'POST',
         headers: {'Content-Type': 'text/plain'}, // evita preflight CORS no Apps Script
-        body: JSON.stringify({ tipo: 'pedido', order_nsu: orderNsu, email: email })
-      })
-        .catch(function(){ /* segue mesmo se falhar o registro; não trava a compra */ })
-        .then(function(){
-          return fetch('https://api.checkout.infinitepay.io/links', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              handle: HANDLE,
-              items: [{ quantity: 1, price: PRICE_CENTS, description: 'Google IA Pro - 18 meses' }],
-              order_nsu: orderNsu,
-              customer: { email: email },
-              webhook_url: APPS_SCRIPT_URL,
-              redirect_url: window.location.origin + window.location.pathname + '?pago=1'
-            })
-          });
+        body: JSON.stringify({ tipo: 'pedido', order_nsu: orderNsu, email: email }),
+        keepalive: true
+      }).catch(function(){ /* segue mesmo se falhar o registro; não trava a compra */ });
+
+      var link = fetch('https://api.checkout.infinitepay.io/links', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          handle: HANDLE,
+          items: [{ quantity: 1, price: PRICE_CENTS, description: 'Google IA Pro - 18 meses' }],
+          order_nsu: orderNsu,
+          customer: { email: email },
+          webhook_url: APPS_SCRIPT_URL,
+          redirect_url: window.location.origin + window.location.pathname + '?pago=1'
         })
-        .then(function(r){ return r.json(); })
-        .then(function(data){
+      }).then(function(r){ return r.json(); });
+
+      // espera o registro do e-mail no máximo 4s (contados do clique), para não segurar o cliente
+      var registroComLimite = Promise.race([registro, new Promise(function(res){ setTimeout(res, 4000); })]);
+
+      Promise.all([link, registroComLimite])
+        .then(function(res){
+          var data = res[0];
           if(!data || !data.url) throw new Error('Resposta sem url');
-          if(checkoutTab){ checkoutTab.location.href = data.url; }
-          else { window.location.href = data.url; } // pop-up bloqueado: segue na mesma aba
-          setSubmitLoading(false);
-          closeModal();
+          window.location.href = data.url;
         })
         .catch(function(){
-          if(checkoutTab) checkoutTab.close();
           setSubmitLoading(false);
           error.textContent = 'Não foi possível abrir o checkout agora. Tente novamente em instantes.';
           error.hidden = false;
